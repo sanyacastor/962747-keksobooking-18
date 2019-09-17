@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 - Студент: [Александр Ильин](https://up.htmlacademy.ru/javascript/18/user/962747).
-- Наставник: [Дмитрий Рябинин](https://htmlacademy.ru/profile/id63289).
+- Наставник: [Дмитрий Рябинин](https://up.htmlacademy.ru/javascript/18/user/63289).
 
 ---
 
