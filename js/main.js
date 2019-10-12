@@ -45,6 +45,9 @@ var X_MAX = 1150;
 var Y_MIN = 165;
 var Y_MAX = 595;
 
+var ENTER_KEYCODE = 13;
+var PIN_POINTER_HEIGHT = 22;
+
 // var PIN_OFFSET_X = 25;
 // var PIN_OFFSET_Y = 35;
 
@@ -129,15 +132,104 @@ function renderPlaces(places) {
   return fragment;
 }
 
+var form = document.querySelector('.ad-form');
+var fieldsets = document.querySelectorAll('fieldset');
+var mainPin = document.querySelector('.map__pin--main');
+var adressInput = document.querySelector('#address');
+var roomInput = document.querySelector('#room_number');
+var guestInput = document.querySelector('#capacity');
+
+var map = document.querySelector('.map');
 var similarPinElements = document.querySelector('.map__pins');
 var similarPinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
 
-var places = generatePlaces();
+function disableElements(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    arr[i].disabled = true;
+  }
+}
 
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
+function activateMap(arr) {
 
-similarPinElements.appendChild(renderPlaces(places));
+  map.classList.remove('map--faded');
+
+  for (var i = 0; i < arr.length; i++) {
+    arr[i].disabled = false;
+  }
+
+  form.classList.remove('ad-form--disabled');
+
+  var places = generatePlaces();
+  similarPinElements.appendChild(renderPlaces(places));
+}
+
+function setCenterCoordinates() {
+  var yOffset = mainPin.offsetWidth / 2;
+  var xOffset = mainPin.offsetHeight / 2;
+
+  adressInput.value = (mainPin.offsetLeft + xOffset) + ', ' + (mainPin.offsetTop + yOffset);
+}
+
+function setOffsetCoordinates() {
+  var yOffset = mainPin.offsetWidth;
+  var xOffset = mainPin.offsetHeight / 2;
+
+  adressInput.value = (mainPin.offsetLeft + xOffset) + ', ' + (mainPin.offsetTop + yOffset + PIN_POINTER_HEIGHT);
+}
+
+mainPin.addEventListener('mousedown', function () {
+  activateMap(fieldsets);
+  setOffsetCoordinates(mainPin);
+});
+
+mainPin.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    activateMap(fieldsets);
+  }
+});
+
+// Custom rooms and Guests validation
+
+function roomGuestValidation() {
+
+  var rooms = parseInt(roomInput.value, 10);
+  var guests = parseInt(guestInput.value, 10);
+
+  if (rooms > guests || rooms === guests) {
+    return true;
+  }
+
+  return false;
+}
+
+roomInput.addEventListener('change', function () {
+  if (!roomGuestValidation()) {
+    guestInput.setCustomValidity('Нужно больше комнат чтобы разместить всех гостей');
+  }
+  roomInput.setCustomValidity('');
+});
+
+guestInput.addEventListener('change', function () {
+  if (!roomGuestValidation()) {
+    guestInput.setCustomValidity('Столько гостей не уместить в ' + roomInput.value + ' комнате(ах)');
+  }
+  guestInput.setCustomValidity('');
+});
+
+// Form submit validation
+
+form.addEventListener('submit', function (evt) {
+  if (!roomGuestValidation()) {
+    evt.preventDefault();
+    guestInput.setCustomValidity('Столько гостей не уместятся в ' + roomInput.value + ' комнате(ах)');
+    return;
+  }
+  guestInput.setCustomValidity('');
+  this.submit();
+});
+
+setCenterCoordinates();
+disableElements(fieldsets);
 
