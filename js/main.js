@@ -227,7 +227,6 @@ form.addEventListener('submit', function (evt) {
     return;
   }
   guestInput.setCustomValidity('');
-  this.submit();
 });
 
 setCenterCoordinates();
