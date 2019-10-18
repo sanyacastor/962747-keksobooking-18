@@ -23,9 +23,9 @@
   }
 
   window.random = {
-    getRandom: getRandom,
-    getRandomInRange: getRandomInRange,
-    getRandomFromList: getRandomFromList
+    get: getRandom,
+    getInRange: getRandomInRange,
+    getFromList: getRandomFromList
   };
 
 })();

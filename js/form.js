@@ -7,6 +7,18 @@
   var roomInput = document.querySelector('#room_number');
   var guestInput = document.querySelector('#capacity');
 
+  function activate() {
+    setDisabled(fieldsets, true);
+  }
+
+  function enable() {
+    form.classList.remove('ad-form--disabled');
+  }
+
+  function setAddress(addressString) {
+    adressInput.value = addressString;
+  }
+
   function setDisabled(arr, value) {
     for (var i = 0; i < arr.length; i++) {
       arr[i].disabled = value;
@@ -48,9 +60,11 @@
   });
 
   window.form = {
+    activate: activate,
     setDisabled: setDisabled,
+    setAddress: setAddress,
     checkGuests: checkGuests,
-    form: form,
+    enable: enable,
     fieldsets: fieldsets,
     adressInput: adressInput,
     roomInput: roomInput,
