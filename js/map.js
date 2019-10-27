@@ -5,6 +5,11 @@
   var PIN_POINTER_HEIGHT = 22;
 
   var map = document.querySelector('.map');
+  var errorTemplate = document.querySelector('#error')
+  .content
+  .querySelector('.error');
+  var error = errorTemplate.cloneNode(true);
+
   var mainPin = document.querySelector('.map__pin--main');
   var similarPinElements = document.querySelector('.map__pins');
 
@@ -27,8 +32,11 @@
 
     window.form.enable();
 
-    var places = window.data.generatePlaces();
-    similarPinElements.appendChild(renderPlaces(places));
+    // var places = window.data.generatePlaces();
+    // similarPinElements.appendChild(renderPlaces(places));
+
+    window.load.getData(sucessDataLoadHadler, errorDataLoadHandler);
+
     window.form.checkGuests();
   }
 
@@ -58,6 +66,15 @@
       activateMap(window.form.fieldsets);
     }
   });
+
+  function sucessDataLoadHadler(data) {
+    similarPinElements.appendChild(renderPlaces(data));
+  }
+  function errorDataLoadHandler(err) {
+    var errtext = error.querySelector('.error__message');
+    errtext.textContent = err;
+    document.querySelector('main').appendChild(error);
+  }
 
   window.map = {
     activate: setCenterCoordinates
