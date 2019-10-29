@@ -5,10 +5,6 @@
   var PIN_POINTER_HEIGHT = 22;
 
   var map = document.querySelector('.map');
-  var errorTemplate = document.querySelector('#error')
-  .content
-  .querySelector('.error');
-  var error = errorTemplate.cloneNode(true);
 
   var mainPin = document.querySelector('.map__pin--main');
   var similarPinElements = document.querySelector('.map__pins');
@@ -35,7 +31,7 @@
     // var places = window.data.generatePlaces();
     // similarPinElements.appendChild(renderPlaces(places));
 
-    window.load.getData(sucessDataLoadHadler, errorDataLoadHandler);
+    window.load.getData(sucessDataLoadHadler, window.error.dataLoadHandler);
 
     window.form.checkGuests();
   }
@@ -69,11 +65,6 @@
 
   function sucessDataLoadHadler(data) {
     similarPinElements.appendChild(renderPlaces(data));
-  }
-  function errorDataLoadHandler(err) {
-    var errtext = error.querySelector('.error__message');
-    errtext.textContent = err;
-    document.querySelector('main').appendChild(error);
   }
 
   window.map = {
