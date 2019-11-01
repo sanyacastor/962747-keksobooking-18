@@ -4,6 +4,7 @@
   var ENTER_KEYCODE = 13;
   var PIN_POINTER_HEIGHT = 22;
 
+  var offers = [];
   var map = document.querySelector('.map');
 
   var mainPin = document.querySelector('.map__pin--main');
@@ -23,16 +24,9 @@
   function activateMap(arr) {
 
     map.classList.remove('map--faded');
-
     window.form.setDisabled(arr, false);
-
     window.form.enable();
-
-    // var places = window.data.generatePlaces();
-    // similarPinElements.appendChild(renderPlaces(places));
-
     window.load.getData(sucessDataLoadHadler, window.error.dataLoadHandler);
-
     window.form.checkGuests();
   }
 
@@ -64,11 +58,23 @@
   });
 
   function sucessDataLoadHadler(data) {
-    similarPinElements.appendChild(renderPlaces(data));
+    offers = data.slice();
+    var filtredData = data.splice(0, 5);
+    similarPinElements.appendChild(renderPlaces(filtredData));
+
+  }
+
+  function updateData(param) {
+    similarPinElements.innerHTML = '';
+    var offersCopy = offers;
+    var filtredData = window.filter.sortByType(offersCopy, param).splice(0, 5);
+    similarPinElements.appendChild(mainPin);
+    similarPinElements.appendChild(renderPlaces(filtredData));
   }
 
   window.map = {
-    activate: setCenterCoordinates
+    activate: setCenterCoordinates,
+    updatePlaces: updateData,
   };
 
 })();
