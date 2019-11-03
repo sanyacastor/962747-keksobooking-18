@@ -67,7 +67,7 @@
   function updateData(param) {
     similarPinElements.innerHTML = '';
     var offersCopy = offers;
-    var filtredData = window.filter.sortByType(offersCopy, param).splice(0, 5);
+    var filtredData = window.filter.byType(offersCopy, param).splice(0, 5);
     similarPinElements.appendChild(mainPin);
     similarPinElements.appendChild(renderPlaces(filtredData));
   }

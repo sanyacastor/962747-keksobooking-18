@@ -6,7 +6,7 @@
     window.map.updatePlaces(typeInput.value);
   });
 
-  function sortByType(data, type) {
+  function filterByType(data, type) {
     if (type !== 'any') {
       var filtred = data.filter(function (el) {
         return el.offer.type === type;
@@ -18,6 +18,6 @@
 
 
   window.filter = {
-    sortByType: sortByType
+    byType: filterByType
   };
 })();
