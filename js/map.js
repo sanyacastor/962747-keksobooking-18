@@ -138,7 +138,7 @@
   window.map = {
     activate: setCenterCoordinates,
     updatePlaces: updateData,
-
+  }
 
 })();
 
