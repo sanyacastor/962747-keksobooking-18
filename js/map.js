@@ -89,7 +89,7 @@
     cardEl.querySelector('.popup__text--capacity').textContent = data.offer.rooms + ' комнаты для ' + data.offer.guests + ' гостей';
     cardEl.querySelector('.popup__text--time').textContent = 'Заезд после ' + data.offer.checkin + ' выезд до ' + data.offer.checkout;
     cardEl.querySelector('.popup__features').innerHTML = '';
-    cardEl.querySelector('.popup__features').appendChild(getFitureDomElements(data.offer.features));
+    cardEl.querySelector('.popup__features').appendChild(getFeatureDomElements(data.offer.features));
     cardEl.querySelector('.popup__description').textContent = data.offer.description;
     cardEl.querySelector('.popup__photos').innerHTML = '';
     cardEl.querySelector('.popup__photos').appendChild(getPlacePicDomElements(data.offer.photos));
@@ -98,7 +98,7 @@
     map.insertBefore(cardEl, filterContainer);
   }
 
-  function getFitureDomElements(featurelist) {
+  function getFeatureDomElements(featurelist) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < featurelist.length; i++) {
@@ -132,7 +132,6 @@
       'palace': 'Дворец'
     };
     return types[type];
-  }
 
   window.map = {
     activate: setCenterCoordinates,

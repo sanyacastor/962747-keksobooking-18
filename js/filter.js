@@ -12,7 +12,6 @@
     });
   }
 
-
   window.filter = {
     byType: filterByType
   };
