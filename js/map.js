@@ -130,13 +130,15 @@
       'bungalo': 'Бунгало',
       'house': 'Дом',
       'palace': 'Дворец'
-    };
+    }
+    
     return types[type];
+  };
 
   window.map = {
     activate: setCenterCoordinates,
     updatePlaces: updateData,
-  };
+
 
 })();
 
