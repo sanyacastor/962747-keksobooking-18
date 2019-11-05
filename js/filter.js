@@ -7,15 +7,10 @@
   });
 
   function filterByType(data, type) {
-    if (type !== 'any') {
-      var filtred = data.filter(function (el) {
-        return el.offer.type === type;
-      });
-      return filtred;
-    }
-    return data;
+    return data.filter(function (el) {
+      return (type === 'any') ? true : el.offer.type === type;
+    });
   }
-
 
   window.filter = {
     byType: filterByType
