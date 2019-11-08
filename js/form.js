@@ -6,6 +6,11 @@
   var adressInput = document.querySelector('#address');
   var roomInput = document.querySelector('#room_number');
   var guestInput = document.querySelector('#capacity');
+  var priceInput = document.querySelector('#price');
+  var typeInput = document.querySelector('#type');
+  var timeinInput = document.querySelector('#timein');
+  var timeoutInput = document.querySelector('#timeout');
+
 
   function activate() {
     setDisabled(fieldsets, true);
@@ -50,6 +55,66 @@
 
     return true;
   }
+
+  function checkPrice(min) {
+
+    var price = parseInt(priceInput.value, 10);
+
+    if (price > min && price < 1000000) {
+      priceInput.setCustomValidity('');
+      return true;
+    }
+
+    priceInput.setCustomValidity('Неподходящая цена');
+    return false;
+  }
+
+  function checkType() {
+    switch (typeInput.value) {
+      case 'bungalo':
+        priceInput.placeholder = '0';
+        if (!checkPrice(0)) {
+          priceInput.setCustomValidity('Неподходящая цена для бунгало');
+        }
+        break;
+      case 'flat':
+        priceInput.placeholder = '1000';
+        if (!checkPrice(1000)) {
+          priceInput.setCustomValidity('Цена на квартиру должна быть в промежутке от 1000 до 1000000');
+        }
+        break;
+      case 'house':
+        priceInput.placeholder = '5000';
+        if (!checkPrice(5000)) {
+          priceInput.setCustomValidity('Цена на дом должна быть в промежутке от 5000 до 1000000');
+        }
+        break;
+      case 'palace':
+        priceInput.placeholder = '10000';
+        if (!checkPrice(10000)) {
+          priceInput.setCustomValidity('Цена на дворец должна быть в промежутке от 10000 до 1000000');
+        }
+        break;
+      default:
+        priceInput.setCustomValidity('');
+    }
+  }
+
+  timeinInput.addEventListener('change', function () {
+    timeoutInput.value = timeinInput.value;
+  });
+
+  timeoutInput.addEventListener('change', function () {
+    timeinInput.value = timeoutInput.value;
+  });
+
+  typeInput.addEventListener('change', function () {
+    checkType();
+  });
+
+  priceInput.addEventListener('change', function () {
+    checkType();
+  });
 
   roomInput.addEventListener('change', function () {
     checkGuests();

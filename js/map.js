@@ -2,6 +2,7 @@
 
 (function () {
   var ENTER_KEYCODE = 13;
+  var ESC_KEYCODE = 27;
   var PIN_POINTER_HEIGHT = 22;
 
   var offers = [];
@@ -63,8 +64,8 @@
     var filtredData = data.splice(0, 5);
     createCard(filtredData[0]);
     similarPinElements.appendChild(renderPlaces(filtredData));
-
   }
+
 
   function updateData(param) {
     similarPinElements.innerHTML = '';
@@ -72,8 +73,8 @@
     var filtredData = window.filter.byType(offersCopy, param).splice(0, 5);
     similarPinElements.appendChild(mainPin);
     similarPinElements.appendChild(renderPlaces(filtredData));
-
   }
+
   var cardTemplate = document.getElementById('card')
   .content
   .querySelector('.map__card');
@@ -96,6 +97,30 @@
     cardEl.querySelector('.popup__avatar').src = data.author.avatar;
 
     map.insertBefore(cardEl, filterContainer);
+
+    var popup = document.querySelector('.popup');
+    var closeButton = document.querySelector('.popup__close');
+
+    showPopup();
+
+    function closePopup() {
+      popup.classList.add('hidden');
+      closeButton.removeEventListener('click', closePopup);
+      document.removeEventListener('keydown', onPopupEscPress);
+    }
+
+    function onPopupEscPress(evt) {
+      if (evt.keyCode === ESC_KEYCODE) {
+        popup.classList.add('hidden');
+        closeButton.removeEventListener('click', closePopup);
+        document.removeEventListener('keydown', onPopupEscPress);
+      }
+    }
+
+    function showPopup() {
+      closeButton.addEventListener('click', closePopup);
+      document.addEventListener('keydown', onPopupEscPress);
+    }
   }
 
   function getFeatureDomElements(featurelist) {
@@ -106,7 +131,6 @@
       li.classList.add('popup__feature', 'popup__feature--' + featurelist[i]);
       fragment.appendChild(li);
     }
-
     return fragment;
   }
 
@@ -136,8 +160,8 @@
   window.map = {
     activate: setCenterCoordinates,
     updatePlaces: updateData,
+    updateCard: createCard
   };
 
+
 })();
-
-

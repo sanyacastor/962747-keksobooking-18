@@ -15,6 +15,14 @@
     avatar.src = place.author.avatar;
     avatar.alt = place.offer.title;
 
+    pin.addEventListener('click', function () {
+      pinClickHandler(place);
+    });
+
+    function pinClickHandler(item) {
+      window.map.updateCard(item);
+    }
+
     return pin;
   }
 
