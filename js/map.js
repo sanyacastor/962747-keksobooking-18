@@ -64,25 +64,8 @@
     var filtredData = data.splice(0, 5);
     createCard(filtredData[0]);
     similarPinElements.appendChild(renderPlaces(filtredData));
-    addPinsEventListeners(filtredData);
-
   }
 
-  function addPinsEventListeners(data) {
-    var pins = map.querySelectorAll('.map__pin');
-
-    pins.forEach(function (el) {
-      el.addEventListener('click', function (evt) {
-        pinClickHandler(evt, data);
-      });
-    });
-  }
-
-  function pinClickHandler(evt, data) {
-    data.forEach(function (el) {
-      return (el.offer.title !== evt.target.alt) ? true : createCard(el);
-    });
-  }
 
   function updateData(param) {
     similarPinElements.innerHTML = '';
@@ -90,7 +73,6 @@
     var filtredData = window.filter.byType(offersCopy, param).splice(0, 5);
     similarPinElements.appendChild(mainPin);
     similarPinElements.appendChild(renderPlaces(filtredData));
-    addPinsEventListeners(filtredData);
   }
 
   var cardTemplate = document.getElementById('card')
@@ -119,16 +101,26 @@
     var popup = document.querySelector('.popup');
     var closeButton = document.querySelector('.popup__close');
 
-    popup.classList.remove('hidden');
-    closeButton.addEventListener('click', function () {
-      popup.classList.add('hidden');
-    });
+    showPopup();
 
-    document.addEventListener('keydown', function (evt) {
+    function closePopup() {
+      popup.classList.add('hidden');
+      closeButton.removeEventListener('click', closePopup);
+      document.removeEventListener('keydown', onPopupEscPress);
+    }
+
+    function onPopupEscPress(evt) {
       if (evt.keyCode === ESC_KEYCODE) {
         popup.classList.add('hidden');
+        closeButton.removeEventListener('click', closePopup);
+        document.removeEventListener('keydown', onPopupEscPress);
       }
-    });
+    }
+
+    function showPopup() {
+      closeButton.addEventListener('click', closePopup);
+      document.addEventListener('keydown', onPopupEscPress);
+    }
   }
 
   function getFeatureDomElements(featurelist) {
@@ -139,7 +131,6 @@
       li.classList.add('popup__feature', 'popup__feature--' + featurelist[i]);
       fragment.appendChild(li);
     }
-
     return fragment;
   }
 
@@ -170,6 +161,8 @@
   window.map = {
     activate: setCenterCoordinates,
     updatePlaces: updateData,
+    updateCard: createCard
   };
+
 
 })();
