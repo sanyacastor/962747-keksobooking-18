@@ -4,9 +4,14 @@
   var ENTER_KEYCODE = 13;
   var ESC_KEYCODE = 27;
   var PIN_POINTER_HEIGHT = 22;
+  var MAP_XPOS_TOP = 630;
+  var MAP_XPOS_BOTTOM = 130;
 
   var offers = [];
   var map = document.querySelector('.map');
+  var popup;
+  var closeButton;
+  var isActive = false;
 
   var mainPin = document.querySelector('.map__pin--main');
   var similarPinElements = document.querySelector('.map__pins');
@@ -48,16 +53,82 @@
     window.form.setAddress(addressString);
   }
 
-  mainPin.addEventListener('mousedown', function () {
-    activateMap(window.form.fieldsets);
-    setOffsetCoordinates(mainPin);
-  });
+  // mainPin.addEventListener('mousedown', function () {
+  //   activateMap(window.form.fieldsets);
+  //   setOffsetCoordinates();
+  // });
 
   mainPin.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       activateMap(window.form.fieldsets);
     }
   });
+
+  mainPin.addEventListener('mousedown', function (evt) {
+
+    if (!isActive) {
+      evt.preventDefault();
+      activateMap(window.form.fieldsets);
+      setOffsetCoordinates();
+      isActive = true;
+    } else {
+      var startCoords = {
+        x: evt.clientX,
+        y: evt.clientY
+      };
+
+      var onMouseMove = function (moveEvt) {
+        moveEvt.preventDefault();
+
+        var shift = {
+          x: startCoords.x - moveEvt.clientX,
+          y: startCoords.y - moveEvt.clientY
+        };
+
+        startCoords = {
+          x: moveEvt.clientX,
+          y: moveEvt.clientY
+        };
+
+        mainPin.style.top = getMapPinTop();
+        mainPin.style.left = getMapPinLeft();
+
+        function getMapPinTop() {
+          if (moveEvt.clientY >= MAP_XPOS_TOP) {
+            return MAP_XPOS_TOP + 'px';
+          }
+          if (moveEvt.clientY <= MAP_XPOS_BOTTOM) {
+            return MAP_XPOS_BOTTOM + 'px';
+          }
+          return (mainPin.offsetTop - shift.y) + 'px';
+        }
+
+        function getMapPinLeft() {
+          var mapWidth = map.offsetWidth - (mainPin.offsetWidth / 2);
+          if (moveEvt.clientX >= mapWidth) {
+            return map.offsetWidth - (mainPin.offsetWidth) + 'px';
+          }
+          if (moveEvt.clientX <= 130) {
+            return '0px';
+          }
+          return (mainPin.offsetLeft - shift.x) + 'px';
+        }
+      };
+
+      var onMouseUp = function (upEvt) {
+        upEvt.preventDefault();
+        setOffsetCoordinates();
+
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+
+      };
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+
+    }
+  });
+
 
   function sucessDataLoadHadler(data) {
     offers = data.slice();
@@ -98,28 +169,28 @@
 
     map.insertBefore(cardEl, filterContainer);
 
-    var popup = document.querySelector('.popup');
-    var closeButton = document.querySelector('.popup__close');
+    popup = document.querySelector('.popup');
+    closeButton = document.querySelector('.popup__close');
 
     showPopup();
+  }
 
-    function closePopup() {
+  function closePopup() {
+    popup.classList.add('hidden');
+    closeButton.removeEventListener('click', closePopup);
+    document.removeEventListener('keydown', onPopupEscPress);
+  }
+
+  function showPopup() {
+    closeButton.addEventListener('click', closePopup);
+    document.addEventListener('keydown', onPopupEscPress);
+  }
+
+  function onPopupEscPress(evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
       popup.classList.add('hidden');
       closeButton.removeEventListener('click', closePopup);
       document.removeEventListener('keydown', onPopupEscPress);
-    }
-
-    function onPopupEscPress(evt) {
-      if (evt.keyCode === ESC_KEYCODE) {
-        popup.classList.add('hidden');
-        closeButton.removeEventListener('click', closePopup);
-        document.removeEventListener('keydown', onPopupEscPress);
-      }
-    }
-
-    function showPopup() {
-      closeButton.addEventListener('click', closePopup);
-      document.addEventListener('keydown', onPopupEscPress);
     }
   }
 
