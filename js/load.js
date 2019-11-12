@@ -8,7 +8,7 @@
     var xhr = new XMLHttpRequest();
     var URL = 'https://js.dump.academy/keksobooking/data';
     xhr.responseType = 'json';
-    xhr.timeout = 1000;
+    xhr.timeout = 10000;
 
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
