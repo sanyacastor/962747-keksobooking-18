@@ -3,6 +3,7 @@
 (function () {
   var form = document.querySelector('.ad-form');
   var fieldsets = document.querySelectorAll('.ad-form__element');
+  var title = document.querySelector('#title');
   var adressInput = document.querySelector('#address');
   var roomInput = document.querySelector('#room_number');
   var guestInput = document.querySelector('#capacity');
@@ -10,7 +11,59 @@
   var typeInput = document.querySelector('#type');
   var timeinInput = document.querySelector('#timein');
   var timeoutInput = document.querySelector('#timeout');
+  var descInput = document.querySelector('#description');
+  var featuresInputList = form.querySelectorAll('input[type="checkbox"]');
 
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    send(new FormData(form), resetForm, window.error.dataSendHandler);
+  });
+
+
+  function send(data, onLoad, onError) {
+
+    var xhr = new XMLHttpRequest();
+    var URL = 'https://js.dump.academy/keksobooking+';
+    xhr.timeout = 10000;
+
+    xhr.addEventListener('load', function () {
+      if (xhr.status === 200) {
+        onLoad(xhr.response);
+      } else {
+        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      }
+    });
+
+    xhr.addEventListener('error', function () {
+      onError('Произошла ошибка соединения');
+    });
+
+    xhr.addEventListener('timeout', function () {
+      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
+
+    xhr.open('POST', URL);
+    xhr.send(data);
+  }
+
+  function resetForm() {
+    title.value = '';
+    roomInput.value = '1';
+    guestInput.value = '3';
+    priceInput.value = '';
+    priceInput.placeholder = '5000';
+    typeInput.value = 'flat';
+    descInput.value = '';
+    timeinInput.value = '12:00';
+    timeoutInput.value = '12:00';
+
+    featuresInputList.forEach(function (el) {
+      el.checked = false;
+    });
+
+    disable();
+    window.map.deactivate();
+  }
 
   function activate() {
     setDisabled(fieldsets, true);
@@ -18,6 +71,10 @@
 
   function enable() {
     form.classList.remove('ad-form--disabled');
+  }
+
+  function disable() {
+    form.classList.add('ad-form--disabled');
   }
 
   function setAddress(addressString) {
