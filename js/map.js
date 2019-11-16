@@ -1,21 +1,15 @@
 'use strict';
 
 (function () {
-  var ENTER_KEYCODE = 13;
-  var ESC_KEYCODE = 27;
   var PIN_POINTER_HEIGHT = 22;
   var MAP_XPOS_TOP = 543;
   var MAP_XPOS_BOTTOM = 42.5;
-
-  // document.addEventListener('click', function (evt) {
-  //   console.log('X: ' + evt.offsetX + ' Y:' + evt.offsetY);
-  // }
-  // );
 
   var offers = [];
   var map = document.querySelector('.map');
   var popup;
   var closeButton;
+
 
   var mainPin = document.querySelector('.map__pin--main');
   var similarPinElements = document.querySelector('.map__pins');
@@ -33,12 +27,19 @@
   }
 
   function activateMap(arr) {
-
     map.classList.remove('map--faded');
     window.form.setDisabled(arr, false);
     window.form.enable();
-    window.load.getData(sucessDataLoadHadler, window.error.dataLoadHandler);
+    window.data.get(sucessDataLoadHadler, window.error.dataLoadHandler);
     window.form.checkGuests();
+  }
+
+  function deactivateMap() {
+    closePopup();
+    similarPinElements.innerHTML = '<div class="map__overlay"><h2 class="map__title">И снова Токио!</h2></div>';
+    similarPinElements.appendChild(mainPin);
+    map.classList.add('map--faded');
+    window.sucess.show();
   }
 
   function setCenterCoordinates() {
@@ -63,7 +64,7 @@
   // });
 
   mainPin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === window.keyCode.enter) {
       activateMap(window.form.fieldsets);
     }
   });
@@ -121,11 +122,10 @@
   }
 
   function getMapPinLeft(evt, shift) {
-    var mapWidth = map.offsetWidth - (mainPin.offsetWidth / 2);
-    if (evt.clientX >= mapWidth) {
+    if (evt.clientX >= map.offsetWidth) {
       return map.offsetWidth - (mainPin.offsetWidth) + 'px';
     }
-    if (evt.clientX <= 130) {
+    if (evt.clientX <= 0) {
       return '0px';
     }
     return (mainPin.offsetLeft - shift.x) + 'px';
@@ -184,15 +184,14 @@
   }
 
   function showPopup() {
+    popup.classList.remove('hidden');
     closeButton.addEventListener('click', closePopup);
     document.addEventListener('keydown', onPopupEscPress);
   }
 
   function onPopupEscPress(evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      popup.classList.add('hidden');
-      closeButton.removeEventListener('click', closePopup);
-      document.removeEventListener('keydown', onPopupEscPress);
+    if (evt.keyCode === window.keyCode.esc) {
+      closePopup();
     }
   }
 
@@ -232,6 +231,7 @@
   }
   window.map = {
     activate: setCenterCoordinates,
+    deactivate: deactivateMap,
     updatePlaces: updateData,
     updateCard: createCard
   };

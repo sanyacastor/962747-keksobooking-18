@@ -1,91 +1,63 @@
 'use strict';
 
+
 (function () {
 
-  var X_MIN = 50;
-  var X_MAX = 1150;
-  var Y_MIN = 165;
-  var Y_MAX = 595;
+  function load(onLoad, onError) {
 
-  var TITLE = [
-    'Комната',
-    'Квартира',
-    'Отель'
-  ];
+    var xhr = new XMLHttpRequest();
+    var URL = 'https://js.dump.academy/keksobooking/data';
+    xhr.responseType = 'json';
+    xhr.timeout = 10000;
 
-  var DESCRIPTION = [
-    'Я не гонюсь за деньгами, поэтому, признаюсь, хочется делить свою уютную квартиру с позитивными гостями!',
-    'Каждый элемент интерьера продуман и сделан со вкусом.',
-    'Для комфортного сна в квартире повешены шторы блек-аут которые плотно закрывают окна.'
-  ];
+    xhr.addEventListener('load', function () {
+      if (xhr.status === 200) {
+        onLoad(xhr.response);
+      } else {
+        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      }
+    });
 
-  var CHECKTIME = [
-    '12:00',
-    '13:00',
-    '14:00'
-  ];
+    xhr.addEventListener('error', function () {
+      onError('Произошла ошибка соединения');
+    });
 
-  var PLACE_TYPE = [
-    'palace',
-    'flat',
-    'house',
-    'bungalo'
-  ];
+    xhr.addEventListener('timeout', function () {
+      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
 
-  var FEATURES = [
-    'wifi',
-    'dishwasher',
-    'parking',
-    'washer',
-    'elevator',
-    'conditioner'
-  ];
+    xhr.open('GET', URL);
+    xhr.send();
+  }
 
-  var PHOTOS = [
-    'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-  ];
+  function send(data, onLoad, onError) {
 
-  function generatePlaces() {
+    var xhr = new XMLHttpRequest();
+    var URL = 'https://js.dump.academy/keksobooking';
+    xhr.timeout = 10000;
 
-    var places = [];
+    xhr.addEventListener('load', function () {
+      if (xhr.status === 200) {
+        onLoad(xhr.response);
+      } else {
+        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      }
+    });
 
-    for (var i = 1; i < 9; i++) {
+    xhr.addEventListener('error', function () {
+      onError('Произошла ошибка соединения');
+    });
 
-      var place = {
-        author: {
-          avatar: 'img/avatars/user0' + i + '.png'
-        },
+    xhr.addEventListener('timeout', function () {
+      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
 
-        location: {
-          x: window.random.getInRange(X_MIN, X_MAX),
-          y: window.random.getInRange(Y_MIN, Y_MAX)
-        },
-
-        offer: {
-          title: window.random.get(TITLE),
-          address: location.x + ', ' + location.y,
-          price: window.random.getInRange(100, 5000),
-          type: window.random.get(PLACE_TYPE),
-          rooms: window.random.getInRange(1, 3),
-          guests: window.random.getInRange(1, 5),
-          checkin: window.random.get(CHECKTIME),
-          checkout: window.random.get(CHECKTIME),
-          features: window.random.getFromList(FEATURES),
-          description: window.random.get(DESCRIPTION),
-          photos: window.random.getFromList(PHOTOS)
-        }
-      };
-
-      places.push(place);
-    }
-    return places;
+    xhr.open('POST', URL);
+    xhr.send(data);
   }
 
   window.data = {
-    generatePlaces: generatePlaces
+    get: load,
+    send: send
   };
-
-
 })();
