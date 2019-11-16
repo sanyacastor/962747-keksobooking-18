@@ -2,47 +2,44 @@
 
 
 (function () {
-  var ESC_KEYCODE = 27;
-
+  var main = document.querySelector('main');
   var errorTemplate = document.querySelector('#error')
   .content
   .querySelector('.error');
   var error = errorTemplate.cloneNode(true);
-
   var errtext = error.querySelector('.error__message');
 
   function dataLoadErrorHandler(err) {
     errtext.textContent = err;
-    document.querySelector('main').appendChild(error);
-  }
-
-  function dataSendErrorHandler() {
-    document.querySelector('main').appendChild(error);
+    main.appendChild(error);
     var btn = error.querySelector('.error__button');
+    error.classList.remove('hidden');
 
     btn.addEventListener('click', buttonClickHandler);
     document.addEventListener('keydown', escClickHandler);
     document.addEventListener('click', buttonClickHandler);
   }
 
-  function buttonClickHandler() {
+  function hideError() {
     var btn = error.querySelector('.error__button');
-    error.style.display = 'none';
+    error.classList.add('hidden');
+
     btn.removeEventListener('click', buttonClickHandler);
     document.removeEventListener('keydown', escClickHandler);
+    document.removeEventListener('click', buttonClickHandler);
+  }
+
+  function buttonClickHandler() {
+    hideError();
   }
 
   function escClickHandler(evt) {
-    var btn = error.querySelector('.error__button');
-    if (evt.keyCode === ESC_KEYCODE) {
-      error.style.display = 'none';
-      btn.removeEventListener('click', buttonClickHandler);
-      document.removeEventListener('keydown', escClickHandler);
+    if (evt.keyCode === window.keyCode.esc) {
+      hideError();
     }
   }
 
   window.error = {
-    dataLoadHandler: dataLoadErrorHandler,
-    dataSendHandler: dataSendErrorHandler
+    data: dataLoadErrorHandler
   };
 })();

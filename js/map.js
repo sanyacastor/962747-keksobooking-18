@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var ENTER_KEYCODE = 13;
-  var ESC_KEYCODE = 27;
   var PIN_POINTER_HEIGHT = 22;
   var MAP_XPOS_TOP = 543;
   var MAP_XPOS_BOTTOM = 42.5;
@@ -11,11 +9,6 @@
   var map = document.querySelector('.map');
   var popup;
   var closeButton;
-
-  var sucessTemplate = document.querySelector('#success')
-  .content
-  .querySelector('.success');
-  var sucess = sucessTemplate.cloneNode(true);
 
 
   var mainPin = document.querySelector('.map__pin--main');
@@ -37,7 +30,7 @@
     map.classList.remove('map--faded');
     window.form.setDisabled(arr, false);
     window.form.enable();
-    window.load.getData(sucessDataLoadHadler, window.error.dataLoadHandler);
+    window.data.get(sucessDataLoadHadler, window.error.dataLoadHandler);
     window.form.checkGuests();
   }
 
@@ -46,13 +39,7 @@
     similarPinElements.innerHTML = '<div class="map__overlay"><h2 class="map__title">И снова Токио!</h2></div>';
     similarPinElements.appendChild(mainPin);
     map.classList.add('map--faded');
-    document.querySelector('main').appendChild(sucess);
-    document.addEventListener('click', documentClickHandler);
-  }
-
-  function documentClickHandler() {
-    sucess.style.display = 'none';
-    document.removeEventListener('click', documentClickHandler);
+    window.sucess.show();
   }
 
   function setCenterCoordinates() {
@@ -77,7 +64,7 @@
   // });
 
   mainPin.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    if (evt.keyCode === window.keyCode.enter) {
       activateMap(window.form.fieldsets);
     }
   });
@@ -203,10 +190,8 @@
   }
 
   function onPopupEscPress(evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      popup.classList.add('hidden');
-      closeButton.removeEventListener('click', closePopup);
-      document.removeEventListener('keydown', onPopupEscPress);
+    if (evt.keyCode === window.keyCode.esc) {
+      closePopup();
     }
   }
 
