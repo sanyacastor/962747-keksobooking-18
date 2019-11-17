@@ -140,10 +140,15 @@
   }
 
 
-  function updateData(param) {
+  function updateData() {
     similarPinElements.innerHTML = '';
     var offersCopy = offers.slice();
-    var filtredData = window.filter.byType(offersCopy, param).splice(0, 5);
+    // var filtredData = window.filter.byType(offersCopy, param).splice(0, 5);
+    var filtredBytype = window.filter.byType(offersCopy);
+    var filtredByPrice = window.filter.byPrice(filtredBytype);
+    var filtredbyGuest = window.filter.byGuests(filtredByPrice);
+    var filtredbyRooms = window.filter.byRooms(filtredbyGuest);
+    var filtredData = window.filter.byFeatures(filtredbyRooms).splice(0, 5);
     similarPinElements.appendChild(mainPin);
     similarPinElements.appendChild(renderPlaces(filtredData));
   }
