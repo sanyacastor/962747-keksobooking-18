@@ -14,9 +14,9 @@
   function getRandomFromList(arr) {
     var newList = [];
 
-    var iteratior = Math.floor(Math.random() * arr.length);
+    var iterator = Math.floor(Math.random() * arr.length);
 
-    for (var i = 0; i < iteratior; i++) {
+    for (var i = 0; i < iterator; i++) {
       newList.push(getRandom(arr));
     }
     return newList;

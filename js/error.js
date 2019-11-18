@@ -7,39 +7,39 @@
   .content
   .querySelector('.error');
   var error = errorTemplate.cloneNode(true);
-  var errtext = error.querySelector('.error__message');
+  var errorText = error.querySelector('.error__message');
 
-  function dataLoadErrorHandler(err) {
-    errtext.textContent = err;
+  function onDataLoadError(err) {
+    errorText.textContent = err;
     main.appendChild(error);
     var btn = error.querySelector('.error__button');
     error.classList.remove('hidden');
 
-    btn.addEventListener('click', buttonClickHandler);
-    document.addEventListener('keydown', escClickHandler);
-    document.addEventListener('click', buttonClickHandler);
+    btn.addEventListener('click', onButtonClick);
+    document.addEventListener('keydown', onEscClick);
+    document.addEventListener('click', onButtonClick);
   }
 
   function hideError() {
     var btn = error.querySelector('.error__button');
     error.classList.add('hidden');
 
-    btn.removeEventListener('click', buttonClickHandler);
-    document.removeEventListener('keydown', escClickHandler);
-    document.removeEventListener('click', buttonClickHandler);
+    btn.removeEventListener('click', onButtonClick);
+    document.removeEventListener('keydown', onEscClick);
+    document.removeEventListener('click', onButtonClick);
   }
 
-  function buttonClickHandler() {
+  function onButtonClick() {
     hideError();
   }
 
-  function escClickHandler(evt) {
-    if (evt.keyCode === window.keyCode.esc) {
+  function onEscClick(evt) {
+    if (evt.keyCode === window.KEYCODE.ESC) {
       hideError();
     }
   }
 
   window.error = {
-    data: dataLoadErrorHandler
+    data: onDataLoadError
   };
 })();

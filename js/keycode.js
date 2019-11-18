@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  window.keyCode = {
-    'enter': 13,
-    'esc': 27
+  window.KEYCODE = {
+    'ENTER': 13,
+    'ESC': 27
   };
 })();

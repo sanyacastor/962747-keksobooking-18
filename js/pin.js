@@ -16,11 +16,12 @@
     avatar.alt = place.offer.title;
 
     pin.addEventListener('click', function () {
-      pinClickHandler(place);
+      onPinClick(place);
     });
 
-    function pinClickHandler(item) {
+    function onPinClick(item) {
       window.map.updateCard(item);
+      window.map.showPopup();
     }
 
     return pin;
