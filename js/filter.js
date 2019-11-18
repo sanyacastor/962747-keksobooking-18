@@ -1,5 +1,8 @@
 'use strict';
 (function () {
+  var MIN_PRICE = 10000;
+  var MAX_PRICE = 50000;
+
   var filterForm = document.querySelector('.map__filters');
   var typeInput = document.getElementById('housing-type');
   var priceInput = document.getElementById('housing-price');
@@ -7,6 +10,18 @@
   var guestInput = document.getElementById('housing-guests');
   var featuresInput = document.getElementById('housing-features');
   var features = featuresInput.querySelectorAll('input');
+
+
+  function setDisabled() {
+    window.form.setDisabledFields(filterForm.querySelectorAll('select'), true);
+    window.form.setDisabledFields(features, true);
+  }
+
+  function setEnabled() {
+    window.form.setDisabledFields(filterForm.querySelectorAll('select'), false);
+    window.form.setDisabledFields(features, false);
+  }
+
 
   function filterByType(data) {
     return data.filter(function (el) {
@@ -32,11 +47,11 @@
         case 'any':
           return true;
         case 'middle':
-          return el.offer.price > 10000 && el.offer.price < 50000;
+          return el.offer.price > MIN_PRICE && el.offer.price < MAX_PRICE;
         case 'low':
-          return el.offer.price <= 10000;
+          return el.offer.price <= MIN_PRICE;
         case 'high':
-          return el.offer.price >= 50000;
+          return el.offer.price >= MAX_PRICE;
         default:
           return false;
       }
@@ -44,28 +59,28 @@
   }
 
   function filterByFeatures(data) {
-    var chekkedFeatures = [];
+    var checkedFeatures = [];
 
     features.forEach(function (el) {
       if (el.checked) {
-        chekkedFeatures.push(el.value);
+        checkedFeatures.push(el.value);
       }
-      return chekkedFeatures;
+      return checkedFeatures;
     });
 
     return data.filter(function (el) {
-      return chekkedFeatures.every(function (feat) {
+      return checkedFeatures.every(function (feat) {
         return el.offer.features.includes(feat);
       });
     });
 
   }
 
-  var filterChangeHandler = window.debounce(function () {
+  var onFilterChange = window.debounce(function () {
     window.map.updatePlaces();
   });
 
-  filterForm.addEventListener('change', filterChangeHandler);
+  filterForm.addEventListener('change', onFilterChange);
 
 
   window.filter = {
@@ -73,6 +88,8 @@
     byRooms: filterByRooms,
     byGuests: filterByGuests,
     byPrice: filterByPrice,
-    byFeatures: filterByFeatures
+    byFeatures: filterByFeatures,
+    enable: setEnabled,
+    disable: setDisabled
   };
 })();
