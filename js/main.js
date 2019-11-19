@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  window.map.activate();
+  window.map.setPinCoordinates();
   window.form.activate();
   window.filter.disable();
 })();

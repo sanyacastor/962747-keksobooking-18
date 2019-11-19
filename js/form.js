@@ -11,16 +11,20 @@
   var timeinInput = document.querySelector('#timein');
   var timeoutInput = document.querySelector('#timeout');
   var avatar = document.querySelector('#avatar');
+  var formResetButton = document.querySelector('.ad-form__reset');
+
 
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.data.send(new FormData(form), onFormReset, window.error.data);
+    window.data.send(new FormData(form), resetForm, window.error.data);
   });
 
-  function onFormReset() {
+  function resetForm() {
     form.reset();
     disable();
     window.map.deactivate();
+    window.map.resetMainPin();
+    window.map.setPinCoordinates();
   }
 
   function activate() {
@@ -31,12 +35,18 @@
   function enable() {
     form.classList.remove('ad-form--disabled');
     avatar.disabled = false;
+    formResetButton.addEventListener('click', onFormReset);
+  }
+
+  function onFormReset() {
+    resetForm();
   }
 
   function disable() {
     form.classList.add('ad-form--disabled');
     setDisabled(fieldsets, true);
     avatar.disabled = true;
+    formResetButton.removeEventListener('click', onFormReset);
   }
 
   function setAddress(addressString) {

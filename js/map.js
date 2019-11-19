@@ -2,8 +2,10 @@
 
 (function () {
   var PIN_POINTER_HEIGHT = 22;
-  var MAP_XPOS_TOP = 543;
-  var MAP_XPOS_BOTTOM = 42.5;
+  var PIN_HEIGTH = 65;
+  var PIN_WIDTH = 65;
+  var MAP_XPOS_TOP = 630;
+  var MAP_XPOS_BOTTOM = 130;
 
   var offers = [];
   var map = document.querySelector('.map');
@@ -31,7 +33,7 @@
     window.form.setDisabledFields(arr, false);
     window.form.enable();
     window.filter.enable();
-    window.data.get(onSuccessDataLoad, window.error.onDataLoad);
+    window.data.get(onSuccessDataLoad, window.error.data);
     window.form.checkGuests();
   }
 
@@ -59,6 +61,11 @@
     window.form.setAddress(addressString);
   }
 
+  function resetMainPinPoition() {
+    mainPin.style.left = '570px';
+    mainPin.style.top = '375px';
+  }
+
 
   mainPin.addEventListener('keydown', function (evt) {
     if (evt.keyCode === window.KEYCODE.ENTER) {
@@ -69,6 +76,7 @@
   mainPin.addEventListener('mousedown', function (evt) {
 
     evt.preventDefault();
+
     activateMap(window.form.fieldsets);
 
     var startCoords = {
@@ -90,8 +98,14 @@
         y: moveEvt.clientY
       };
 
-      mainPin.style.top = getMapPinTop(moveEvt, shift);
-      mainPin.style.left = getMapPinLeft(moveEvt, shift);
+      if ((mainPin.offsetLeft - shift.x) >= -(PIN_WIDTH / 2) && (mainPin.offsetLeft - shift.x) <= (map.offsetWidth - PIN_WIDTH / 2)) {
+        mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+      }
+
+      if ((mainPin.offsetTop - shift.y) >= (MAP_XPOS_BOTTOM - PIN_POINTER_HEIGHT - PIN_HEIGTH) &&
+      (mainPin.offsetTop - shift.y) <= (MAP_XPOS_TOP - PIN_POINTER_HEIGHT - PIN_HEIGTH)) {
+        mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
+      }
 
     };
 
@@ -103,31 +117,11 @@
       document.removeEventListener('mouseup', onMouseUp);
 
     };
+
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
 
   });
-
-  function getMapPinTop(evt, shift) {
-    if (evt.clientY >= MAP_XPOS_TOP) {
-      return MAP_XPOS_TOP + 'px';
-    }
-    if (evt.clientY <= MAP_XPOS_BOTTOM) {
-      return MAP_XPOS_BOTTOM + 'px';
-    }
-    return (mainPin.offsetTop - shift.y) + 'px';
-  }
-
-  function getMapPinLeft(evt, shift) {
-    if (evt.clientX >= map.offsetWidth) {
-      return map.offsetWidth - (mainPin.offsetWidth) + 'px';
-    }
-    if (evt.clientX <= 0) {
-      return '0px';
-    }
-    return (mainPin.offsetLeft - shift.x) + 'px';
-  }
-
 
   function onSuccessDataLoad(data) {
     offers = data.slice();
@@ -239,11 +233,12 @@
     return types[type];
   }
   window.map = {
-    activate: setCenterCoordinates,
+    setPinCoordinates: setCenterCoordinates,
     deactivate: deactivateMap,
     updatePlaces: updateData,
     updateCard: createCard,
-    showPopup: showPopup
+    showPopup: showPopup,
+    resetMainPin: resetMainPinPoition
   };
 
 
