@@ -22,6 +22,7 @@
   function resetForm() {
     form.reset();
     disable();
+    window.filter.disable();
     window.map.deactivate();
     window.map.resetMainPin();
     window.map.setPinCoordinates();
@@ -89,7 +90,7 @@
 
     var price = parseInt(priceInput.value, 10);
 
-    if (price > min && price < 1000000) {
+    if (price >= min && price <= 1000000) {
       priceInput.setCustomValidity('');
       return true;
     }

@@ -2,7 +2,7 @@
 
 (function () {
   var PIN_POINTER_HEIGHT = 22;
-  var PIN_HEIGTH = 65;
+  var PIN_HEIGHT = 65;
   var PIN_WIDTH = 65;
   var MAP_XPOS_TOP = 630;
   var MAP_XPOS_BOTTOM = 130;
@@ -38,7 +38,9 @@
   }
 
   function deactivateMap() {
-    closePopup();
+    if (popup) {
+      closePopup();
+    }
     similarPinElements.innerHTML = '<div class="map__overlay"><h2 class="map__title">И снова Токио!</h2></div>';
     similarPinElements.appendChild(mainPin);
     map.classList.add('map--faded');
@@ -98,12 +100,13 @@
         y: moveEvt.clientY
       };
 
-      if ((mainPin.offsetLeft - shift.x) >= -(PIN_WIDTH / 2) && (mainPin.offsetLeft - shift.x) <= (map.offsetWidth - PIN_WIDTH / 2)) {
+      if ((mainPin.offsetLeft - shift.x) >= -(PIN_WIDTH / 2) &&
+      (mainPin.offsetLeft - shift.x) <= (map.offsetWidth - PIN_WIDTH / 2)) {
         mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
       }
 
-      if ((mainPin.offsetTop - shift.y) >= (MAP_XPOS_BOTTOM - PIN_POINTER_HEIGHT - PIN_HEIGTH) &&
-      (mainPin.offsetTop - shift.y) <= (MAP_XPOS_TOP - PIN_POINTER_HEIGHT - PIN_HEIGTH)) {
+      if ((mainPin.offsetTop - shift.y) >= (MAP_XPOS_BOTTOM - PIN_POINTER_HEIGHT - PIN_HEIGHT) &&
+      (mainPin.offsetTop - shift.y) <= (MAP_XPOS_TOP - PIN_POINTER_HEIGHT - PIN_HEIGHT)) {
         mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
       }
 
