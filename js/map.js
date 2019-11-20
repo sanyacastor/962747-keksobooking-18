@@ -12,7 +12,6 @@
   var popup;
   var closeButton;
 
-
   var mainPin = document.querySelector('.map__pin--main');
   var similarPinElements = document.querySelector('.map__pins');
   var filterContainer = map.querySelector('.map__filters-container');
@@ -67,7 +66,6 @@
     mainPin.style.left = '570px';
     mainPin.style.top = '375px';
   }
-
 
   mainPin.addEventListener('keydown', function (evt) {
     if (evt.keyCode === window.KEYCODE.ENTER) {
@@ -133,7 +131,6 @@
     similarPinElements.appendChild(renderPlaces(filteredData));
   }
 
-
   function updateData() {
     closePopup();
     similarPinElements.innerHTML = '';
@@ -151,7 +148,6 @@
   .content
   .querySelector('.map__card');
   var cardElement = cardTemplate.cloneNode(true);
-
 
   function createCard(data) {
 
@@ -199,7 +195,6 @@
 
   function getFeatureDomElements(features) {
     var fragment = document.createDocumentFragment();
-
 
     features.forEach(function (el) {
       var li = document.createElement('li');

@@ -11,7 +11,6 @@
   var featuresInput = document.getElementById('housing-features');
   var features = featuresInput.querySelectorAll('input');
 
-
   function setDisabled() {
     window.form.setDisabledFields(filterForm.querySelectorAll('select'), true);
     window.form.setDisabledFields(features, true);
@@ -21,7 +20,6 @@
     window.form.setDisabledFields(filterForm.querySelectorAll('select'), false);
     window.form.setDisabledFields(features, false);
   }
-
 
   function filterByType(data) {
     return data.filter(function (el) {
@@ -81,7 +79,6 @@
   });
 
   filterForm.addEventListener('change', onFilterChange);
-
 
   window.filter = {
     byType: filterByType,
